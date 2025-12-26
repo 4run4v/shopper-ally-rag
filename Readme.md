@@ -35,8 +35,8 @@ and explains them in simple language.
 - Simple, modern web interface
 
 ## SS/Home, About:
-<img width="1366" height="1034" alt="image" src="https://github.com/user-attachments/assets/651af9f6-066e-47cf-9e98-c34d9d793908" />
-<img width="1366" height="1737" alt="image" src="https://github.com/user-attachments/assets/d6d7d48c-3c73-4c32-8b77-cb401b9162b1" />
+<img width="1366" height="1034" alt="image" src="https://github.com/user-attachments/assets/371a6063-f68a-4449-93c0-9aee482f0154" />
+<img width="1366" height="1737" alt="image" src="https://github.com/user-attachments/assets/028d96d7-14da-4754-8efe-35f9ee76de1c" />
 
 ## Future Wrok:
 - Making it multimodal.
