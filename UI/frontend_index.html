@@ -1,365 +1,557 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Consumer Protection Law Assistant</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-* { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { margin: 0; background: #ffffff; color: #020617; }
-/* Header */
-.header {
-  border-bottom: 1px solid #e5e7eb;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopper Ally | Consumer Legal Guidance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        /* --- CSS VARIABLES & THEME --- */
+        :root {
+            --primary-navy: #0A192F;
+            --secondary-slate: #475569;
+            --accent-gold: #D4AF37;
+            --bg-offwhite: #F8FAFC;
+            --success-emerald: #10B981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --surface-white: #FFFFFF;
+            --border-light: #E2E8F0;
+            --shadow-soft: 0 4px 20px rgba(10, 25, 47, 0.05);
+            --shadow-hover: 0 10px 30px rgba(10, 25, 47, 0.1);
+            --radius: 12px;
+            
+            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
 
-.header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 22px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.header h1 { margin: 0; font-size: 22px; font-weight: 700; }
-.header p { margin: 4px 0 0; font-size: 13px; color: #6b7280; }
-/* Tabs */
-.nav-tabs {
-  display: flex;
-  gap: 20px;
-  cursor: pointer;
-  align-items: center;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.nav-tabs span {
-  padding: 6px 10px;
-  border-radius: 6px;
-}
+        body {
+            background-color: var(--bg-offwhite);
+            color: var(--primary-navy);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
 
-.nav-tabs span.active {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
+        a { text-decoration: none; color: var(--primary-navy); transition: color 0.3s ease; }
+        a:hover { color: var(--accent-gold); }
 
-/* Section */
-.section {
-  padding: 32px 32px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: none;
-}
+        /* --- BOOT SEQUENCE ANIMATIONS --- */
+        #boot-screen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--primary-navy);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+        }
 
-.section.active { display: block; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-.card {
-  border: 1px solid #e5e7eb;   /* 1pt subtle stroke */
-  border-radius: 14px;
-  background: #ffffff;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+        .boot-logo {
+            font-family: var(--font-serif);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--surface-white);
+            opacity: 0;
+            animation: bootFadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
+        }
 
-.card h3 { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
-.card p, .card span { font-size: 14px; color: #334155; margin-bottom: 8px; }
-.steps { margin-top: 20px; padding-left: 18px; font-size: 15px; color: #334155; }
-.steps li { margin-bottom: 8px; }
-.footer { border-top: 1px solid #e5e7eb; padding: 16px; text-align: center; font-size: 13px; color: #6b7280; margin-top: 24px; }
-/* Demo Section */
-.upload-tabs { display: flex; gap: 10px; margin-top: 16px; }
+        .boot-logo span { color: var(--accent-gold); }
 
-.upload-tab:hover {
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45) !important;
-  transform: translateY(-3px);
-}
+        .boot-line {
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-gold);
+            margin-top: 16px;
+            border-radius: 2px;
+            animation: bootLineExpand 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1s;
+        }
 
-.upload-tab {
-  flex: 1;
-  padding: 14px 0;
-  text-align: center;
-  background: #061524;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 500;
+        @keyframes bootFadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  /* FORCE SHADOW */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
-}
+        @keyframes bootLineExpand {
+            from { width: 0; opacity: 0; }
+            to { width: 140px; opacity: 1; }
+        }
 
+        /* --- STAGGERED UI ENTRANCE --- */
+        .reveal-1, .reveal-2, .reveal-3 {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal-2 { transition-delay: 0.15s; }
+        .reveal-3 { transition-delay: 0.3s; }
 
-.upload-tab:hover,
-.upload-tab:active,
-.upload-tab:focus {
-  background: #061524;
-  color: white;
-}
-.upload-tab {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
+        .ui-loaded .reveal-1, .ui-loaded .reveal-2, .ui-loaded .reveal-3 { opacity: 1; transform: translateY(0); }
 
-.card {
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1);
-}
+        /* --- LAYOUT CONTAINERS --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .section-padding { padding: 80px 0; }
+        h1, h2, h3, h4 { font-family: var(--font-serif); color: var(--primary-navy); }
 
+        /* --- HEADER --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-.query-section {
-  background: #f8fbff;
-  padding: 24px;
-  border-radius: 14px;
+        .header-content { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-text { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700; color: var(--primary-navy); }
+        .logo-text span { color: var(--accent-gold); }
+        .hero-line { font-size: 0.875rem; color: var(--secondary-slate); border-left: 1px solid var(--border-light); padding-left: 12px; margin-left: 12px; display: none; }
+        @media (min-width: 768px) { .hero-line { display: block; } }
+        nav ul { display: flex; gap: 32px; list-style: none; }
+        nav a { font-weight: 500; font-size: 0.95rem; }
 
-  /* STATIC SHADOW */
-  box-shadow: 0 10px 30px rgba(3, 2, 2, 0.18);
+        /* --- HERO SECTION --- */
+        .hero { text-align: center; padding: 100px 0 60px; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 16px; line-height: 1.2; }
+        .hero p { font-size: 1.25rem; color: var(--secondary-slate); max-width: 700px; margin: 0 auto 40px; }
+        .input-container { max-width: 800px; margin: 0 auto; position: relative; }
+        
+        textarea {
+            width: 100%;
+            height: 160px;
+            padding: 24px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            resize: none;
+            box-shadow: var(--shadow-soft);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+        }
 
-  /* spacing */
-  margin-bottom: 28px;
-}
-.query-section {
-  background: #f8fbff;
-  padding: 24px;
-  border-radius: 14px;
+        textarea:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 8px 24px rgba(212, 175, 55, 0.15); transform: translateY(-2px); }
 
-  /* STATIC SHADOW */
-  box-shadow: 0 8px 20px rgba(107, 114, 128, 0.35);
+        .btn-primary {
+            background-color: var(--primary-navy);
+            color: var(--surface-white);
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: all 0.3s ease;
+            font-family: var(--font-sans);
+            position: relative;
+        }
 
+        .btn-primary:hover { background-color: #1a2f52; transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        .btn-primary:active { transform: scale(0.98); }
+        .error-message { color: #ef4444; font-weight: 500; margin-top: 16px; display: none; }
 
-  /* spacing */
-  margin-bottom: 28px;
-}.output-content {
-  display: flex;
-  margin-top: 16px;
-  gap: 16px;
-}
+        /* --- RESPONSE AREA --- */
+        #response-area { display: none; margin-bottom: 80px; }
+        .fade-in-section { animation: softFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes softFadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .response-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px; }
 
-.output-left,
-.output-right {
-  flex: 1;
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #f8fbff;
-  padding: 24px;
-  border-radius: 14px;
+        .card {
+            background: var(--surface-white);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow-soft);
+            border-top: 4px solid var(--primary-navy);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+        .card.accent { border-top-color: var(--accent-gold); }
+        .card h2 { font-size: 1.5rem; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
 
-  /* STATIC SHADOW */
-  box-shadow: 0 8px 20px rgba(107, 114, 128, 0.35); /* STATIC GRAY */
+        /* ==================================================
+           ✨ NEW AESTHETIC MARKDOWN STYLING ✨
+           ================================================== */
+        #dynamic-output { font-size: 1.05rem; line-height: 1.7; color: var(--primary-navy); }
+        
+        #dynamic-output h3 {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--secondary-slate);
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            border: none;
+            padding: 0;
+        }
+        #dynamic-output h3:first-child { margin-top: 0; }
+        
+        #dynamic-output p { margin-bottom: 16px; }
+        #dynamic-output strong { font-weight: 600; color: #020617; } /* Darker contrast for bold text */
+        
+        /* The Green Bubble Badge (Applied via JS) */
+        .dynamic-badge {
+            display: inline-block !important;
+            background-color: var(--success-bg) !important;
+            color: var(--success-emerald) !important;
+            padding: 6px 16px !important;
+            border-radius: 20px !important;
+            font-size: 0.95rem !important;
+            font-weight: 600 !important;
+            margin-bottom: 16px !important;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+        }
 
+        /* Custom Elegant Lists */
+        #dynamic-output ul, #dynamic-output ol {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        #dynamic-output li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 10px;
+            color: var(--primary-navy);
+        }
 
-  /* spacing */
-  margin-bottom: 28px;
-}
-.query-section { margin-top: 16px; padding: 18px; border: 1px solid #e5e7eb; border-radius: 10px; background: #f8fafc; }
-.query-section input { width: 100%; padding: 14px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 14px; }
-.output-content { display: flex; margin-top: 16px; gap: 16px; }
-.output-left, .output-right { flex: 1; padding: 12px; border: 1px solid #e5e7eb; border-radius: 10px; background: #f8fafc; min-height: 150px; white-space: pre-line; }
-.output-left h3, .output-right h3 { margin-top: 0; font-size: 18px; }
-.output-left p, .output-right p { margin: 3px 0; font-weight: 700; font-size: 16px; line-height: 1.2; }
-#actionBtn { margin-top: 12px; padding: 10px 20px; border: none; background: #0f172a; color: white; font-weight: 600; border-radius: 6px; cursor: pointer; }
-/* FORCE STATIC GRAY SHADOW — FINAL OVERRIDE */
-.query-section,
-.output-left,
-.output-right {
-  box-shadow: 0 8px 20px rgba(107, 114, 128, 0.35) !important;
-}
-/* === ABSOLUTE FORCE : STATIC GRAY CARD EFFECT === */
-.query-section,
-.output-left,
-.output-right {
-  box-shadow:
-    0 0 0 1px #9ca3af,              /* visible gray outline */
-    0 12px 24px rgba(107,114,128,.45) !important; /* gray shadow */
-}
-/* ABOUT SECTION CARDS — LIGHT GREY SHADOW (MATCH HOME) */
-#about .card {
-  background: #ffffff;
-  border: 1px solid #cbd5e1; /* softer grey line */
+        #dynamic-output li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-gold);
+            font-weight: bold;
+            font-size: 1.2rem;
+            line-height: 1.4;
+        }
 
-  box-shadow:
-    0 0 0 1px #9ca3af,
-    0 10px 24px rgba(75, 85, 99, 0.45) !important;
+        /* Legal Callout Boxes (For Markdown Blockquotes) */
+        #dynamic-output blockquote {
+            border-left: 4px solid var(--accent-gold);
+            background-color: rgba(212, 175, 55, 0.05);
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-style: italic;
+            color: var(--secondary-slate);
+        }
+        
+        /* -------------------------------------------------- */
 
-  border-radius: 14px;
-}
-/* QUERY INPUT — LIGHT GREY SHADOW (SOFT) */
-.query-section input {
-  background: #ffffff;
-  border: 1px solid #e5e7eb; /* light frosted grey */
+        .data-group { margin-bottom: 24px; }
+        .data-group:last-child { margin-bottom: 0; }
+        .data-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--secondary-slate); font-weight: 600; margin-bottom: 8px; }
+        .data-value { font-size: 1rem; color: var(--primary-navy); }
 
-  box-shadow:
-    0 0 0 1px #d1d5db,
-    0 6px 14px rgba(148, 163, 184, 0.35) !important;
+        /* --- HOW IT WORKS & TRUST --- */
+        .section-header { text-align: center; margin-bottom: 48px; }
+        .section-header h2 { font-size: 2.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
 
-  border-radius: 8px;
-}
+        .step-card, .trust-card {
+            background: var(--surface-white);
+            padding: 32px 24px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-light);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
 
+        .step-card:hover, .trust-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
 
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-navy);
+            color: var(--accent-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 16px;
+            font-size: 1.2rem;
+            font-family: var(--font-serif);
+            transition: transform 0.4s ease, background-color 0.4s ease;
+        }
 
-</style>
+        .step-card:hover .step-number {
+            transform: scale(1.1) rotate(5deg);
+            background-color: var(--accent-gold);
+            color: var(--primary-navy);
+        }
+
+        .step-card h3, .trust-card h3 { font-size: 1.25rem; margin-bottom: 12px; font-family: var(--font-sans); font-weight: 600; }
+        .trust-card h3 { color: var(--accent-gold); }
+        .step-card p, .trust-card p { color: var(--secondary-slate); font-size: 0.95rem; }
+
+        /* --- ABOUT SECTION --- */
+        .about-section {
+            background-color: var(--primary-navy);
+            color: var(--surface-white);
+            border-radius: var(--radius);
+            padding: 64px;
+            margin-bottom: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, rgba(10, 25, 47, 0) 70%);
+            border-radius: 50%;
+        }
+
+        .about-section h2, .about-section h3 { color: var(--surface-white); }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 32px; position: relative; z-index: 1; }
+        .tech-item { border-left: 2px solid var(--accent-gold); padding-left: 16px; margin-bottom: 24px; transition: border-color 0.3s ease; }
+        .tech-item:hover { border-color: var(--surface-white); }
+        .tech-item h4 { color: var(--accent-gold); font-family: var(--font-sans); margin-bottom: 8px; }
+        .tech-item p { color: #94a3b8; font-size: 0.95rem; }
+
+        /* --- FOOTER --- */
+        footer { background-color: #050d1a; color: var(--surface-white); padding: 48px 0; text-align: center; border-top: 4px solid var(--accent-gold); }
+        .footer-logo { font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 12px; }
+        .footer-logo span { color: var(--accent-gold); }
+        .footer-tagline { color: var(--secondary-slate); font-size: 0.9rem; margin-bottom: 24px; }
+
+        @media (max-width: 992px) { .response-grid, .about-grid { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-inner">
-  <div>
-    <h1>Shopper Ally</h1>
-    <p>Your Legal Bestie - Backed By THE CONSUMER PROTECTION ACT, 2019</p>
-  </div>
-  <div class="nav-tabs">
-    <span class="active" onclick="switchTab('home')">Home</span>
-    <span onclick="switchTab('about')">About</span>
-  </div>
-  </div>
-</div>
-
-<!-- About Section (Paste your full code content here) -->
-<div id="about" class="section">
-  <!-- Begin About content -->
-  <h2>What Can a Consumer Do If a Problem Occurs?</h2>
-  <p>
-    The Consumer Protection Act, 2019 empowers consumers with specific rights, remedies, and legal mechanisms to address problems such as defective products, poor services, refund denial, online fraud, and unfair trade practices. Below is a complete overview of the legal options available to a consumer.
-  </p>
-  <h2>Common Consumer Problems</h2>
-  <div class="grid">
-    <div class="card"><h3>Defective / Faulty Product</h3><span>Manufacturing defects, damaged goods</span></div>
-    <div class="card"><h3>Refund or Return Denied</h3><span>Seller refusing refund or replacement</span></div>
-    <div class="card"><h3>Online Fraud or Scam</h3><span>Cheated by online seller or platform</span></div>
-    <div class="card"><h3>Poor or Delayed Service</h3><span>Service not provided or delayed</span></div>
-    <div class="card"><h3>Misleading Advertisement</h3><span>False claims, fake discounts</span></div>
-    <div class="card"><h3>E-Commerce Issues</h3><span>Platform accountability issues</span></div>
-  </div>
-  <h2>Consumer Rights Under the Act</h2>
-  <div class="grid">
-    <div class="card"><h3>Right to Safety</h3><p>Protection against hazardous goods and services.</p></div>
-    <div class="card"><h3>Right to Information</h3><p>Correct information about quality, price, and risks.</p></div>
-    <div class="card"><h3>Right to Choice</h3><p>Freedom to choose goods and services.</p></div>
-    <div class="card"><h3>Right to Be Heard</h3><p>Consumer complaints must be considered.</p></div>
-    <div class="card"><h3>Right to Seek Redressal</h3><p>Refund, replacement, compensation.</p></div>
-    <div class="card"><h3>Right to Consumer Education</h3><p>Awareness of rights and remedies.</p></div>
-  </div>
-  <h2>Legal Remedies Available</h2>
-  <div class="grid">
-    <div class="card"><h3>Refund / Replacement</h3><span>For defective goods or services</span></div>
-    <div class="card"><h3>Compensation</h3><span>For financial or mental loss</span></div>
-    <div class="card"><h3>Product Recall</h3><span>Unsafe or hazardous products</span></div>
-    <div class="card"><h3>Penalty on Seller</h3><span>Unfair trade practices</span></div>
-    <div class="card"><h3>Stop Misleading Ads</h3><span>False or deceptive advertisements</span></div>
-    <div class="card"><h3>File Consumer Complaint</h3><span>Legal action through commissions</span></div>
-  </div>
-  <h2>Consumer Protection Authorities</h2>
-  <div class="grid">
-    <div class="card"><h3>District Consumer Commission</h3><span>Claims up to ₹1 Crore</span></div>
-    <div class="card"><h3>State Consumer Commission</h3><span>Claims ₹1–10 Crore</span></div>
-    <div class="card"><h3>National Consumer Commission</h3><span>Claims above ₹10 Crore</span></div>
-    <div class="card"><h3>Central Consumer Protection Authority (CCPA)</h3><span>Investigates unfair practices</span></div>
-  </div>
-  <h2>Steps to Take If a Consumer Problem Occurs</h2>
-  <ol class="steps">
-    <li>Identify the consumer problem</li>
-    <li>Understand the applicable consumer right</li>
-    <li>Seek remedy from seller or service provider</li>
-    <li>Collect proof (invoice, communication, etc.)</li>
-    <li>File a complaint before the Consumer Commission</li>
-    <li>Seek refund, compensation, or corrective action</li>
-  </ol>
-  <!-- End About content -->
-</div>
-
-<!-- Demo Section -->
-<div id="home" class="section active">
-  <h2>Describe your consumer issue in simple words</h2>
- <div class="query-section static-gray-shadow">
-
-    <input type="text" id="userInput" placeholder="e.g., refund denied, defective product, service issues, fraud" />
-    <button id="actionBtn" onclick="generateAnswer()">Get Answer</button>
-    <p id="detectedIssues"></p>
-    <div id="outputArea" style="display:none;"></div>
-  </div>
- 
-
-  <div class="upload-tabs">
-    <div class="upload-tab">Upload PDF <input type="file" id="pdfInput" style="display:none;"></div>
-    <div class="upload-tab">Upload Image <input type="file" id="imageInput" style="display:none;"></div>
-    <div class="upload-tab">Upload Audio <input type="file" id="audioInput" style="display:none;"></div>
-  </div>
-
-  <div class="output-content">
-    <div class="output-left static-gray-shadow">
-
-      <h3>Simple Education </h3>
-      <p> <strong>Understand consumer rights quickly</strong></p>
-      <p> <strong>Know exactly which legal remedy applies for your problem</strong></p>
-      <p> <strong>Step-by-step guidance for filing complaints</strong></p>
-      <p> <strong>Save time with offline & online document support</strong></p>
+    <div id="boot-screen">
+        <div class="boot-logo">Shopper<span>Ally</span></div>
+        <div class="boot-line"></div>
     </div>
 
-    <div class="output-right static-gray-shadow">
+    <header class="reveal-1">
+        <div class="container header-content">
+            <div class="logo-area">
+                <div class="logo-text">Shopper<span>Ally</span></div>
+                <div class="hero-line">Know Your Rights. Defend Your Interests.</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-      <h3>Relevant Law Sections </h3>
-      <p><strong>Section 2 – Definitions (Consumer, Defect, Deficiency)</strong></p>
-      <p><strong>Section 17–21 – Consumer Commissions & Powers</strong></p>
-      <p><strong>Section 18 – CCPA Powers</strong></p>
-      <p><strong>Section 21 – Misleading Advertisements</strong></p>
-      <p><strong>Product Liability provisions</strong></p>
-      <p><strong>Unfair Trade Practices</strong></p>
-      <p><strong>Right to Safety, Information, Choice, Be Heard, Seek Redressal, Consumer Education</strong></p>
-    </div>
-  </div>
-</div>
+    <main>
+        <section class="hero container reveal-2">
+            <h1>Consumer Legal Guidance Made Simple</h1>
+            <p>Get statute-backed guidance under the Consumer Protection Act, 2019 in seconds.</p>
+            
+            <div class="input-container reveal-3">
+                <textarea id="case-input" placeholder="Describe your consumer issue in detail. E.g., 'I ordered a laptop online and received a defective unit, but the seller is refusing to process a return or refund...'"></textarea>
+                <button class="btn-primary" id="analyze-btn" onclick="analyzeCase()">Analyze Case</button>
+                <div id="error-msg" class="error-message">⚠️ Backend API server not running. Start api.py first.</div>
+            </div>
+        </section>
 
-<div class="footer">
-This web page provides an overview, demo, and educational content under the Consumer Protection Act, 2019.
-</div>
+        <section id="response-area" class="container">
+            <div class="response-grid fade-in-section">
+                <div class="card">
+                    <h2>Legal Opinion</h2>
+                    <div id="dynamic-output"></div>
+                </div>
 
-<script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      document.querySelectorAll('.nav-tabs span').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-    }
-    
-    async function generateAnswer() {
-      const inputText = document.getElementById("userInput").value;
-      const output = document.getElementById("outputArea");
-      const detected = document.getElementById("detectedIssues");
-      const btn = document.getElementById("actionBtn");
-    
-      if (!inputText.trim()) return;
-    
-      btn.innerText = "Processing...";
-      output.style.display = "block";
-      detected.innerText = "";
-    
-      try {
-        const res = await fetch("http://127.0.0.1:5000/ask", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: inputText })
+                <div class="card accent">
+                    <h2>Relevant Statutory References</h2>
+                    <div class="data-group">
+                        <div class="data-label">Section 2(11)</div>
+                        <div class="data-value"><strong>"Defect"</strong><br> <span style="font-size: 0.9rem; color: var(--secondary-slate);">Means any fault, imperfection or shortcoming in the quality, quantity, potency, purity or standard which is required to be maintained by or under any law for the time being in force.</span></div>
+                    </div>
+                    <div class="data-group">
+                        <div class="data-label">Section 2(47)</div>
+                        <div class="data-value"><strong>"Unfair Trade Practice"</strong><br> <span style="font-size: 0.9rem; color: var(--secondary-slate);">Includes a trade practice which, for the purpose of promoting the sale, use or supply of any goods... adopts any unfair method or deceptive practice.</span></div>
+                    </div>
+                    <div class="data-group">
+                        <div class="data-label">Section 35</div>
+                        <div class="data-value"><strong>Filing a Complaint</strong><br> <span style="font-size: 0.9rem; color: var(--secondary-slate);">Outlines the jurisdiction and process by which a consumer can file a complaint with the District Commission.</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="container section-padding">
+            <div class="section-header">
+                <h2>How It Works</h2>
+            </div>
+            <div class="grid-4">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Describe your issue</h3>
+                    <p>Input the details of your consumer dispute clearly in text format.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Provisions Retrieved</h3>
+                    <p>Our vector engine finds the most relevant provisions of the CPA, 2019.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Legal Reasoning</h3>
+                    <p>Advanced LLMs analyze your facts against the retrieved statutes.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Structured Guidance</h3>
+                    <p>Receive a professional, organized legal opinion and reference breakdown.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="container">
+            <div class="about-section">
+                <h2>The Architecture of Shopper Ally</h2>
+                <div class="about-grid">
+                    <div>
+                        <p style="color: #cbd5e1; margin-bottom: 24px;">Built for precision. Shopper Ally leverages Retrieval-Augmented Generation (RAG) to ensure that every consultation is anchored in verified legal texts, eliminating hallucination and providing actionable legal intelligence.</p>
+                        <div class="tech-item">
+                            <h4>Consumer Protection Act, 2019</h4>
+                            <p>The core foundational knowledge base, digitized and indexed for rapid legal retrieval.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="tech-item">
+                            <h4>FAISS Vector Search</h4>
+                            <p>Employs dense vector embeddings to match the semantic meaning of your issue with the exact statutory clauses.</p>
+                        </div>
+                        <div class="tech-item">
+                            <h4>Google Gemini API</h4>
+                            <p>Powers the logical deduction layer, synthesizing retrieved laws into a cohesive, professional legal opinion.</p>
+                        </div>
+                        <div class="tech-item">
+                            <h4>Flask Foundation</h4>
+                            <p>A lightweight, robust Python backend ensuring secure and rapid data processing.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Shopper<span>Ally</span></div>
+            <div class="footer-tagline">Statute-Grounded Consumer Legal Guidance Platform</div>
+            <div style="color: var(--secondary-slate); font-size: 0.85rem;">
+                Powered by HTML, CSS, JavaScript, Flask, FAISS, and Google Gemini API.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Handle Boot Animation
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const bootScreen = document.getElementById('boot-screen');
+                bootScreen.style.opacity = '0';
+                bootScreen.style.visibility = 'hidden';
+                setTimeout(() => {
+                    bootScreen.remove(); 
+                    document.body.classList.add('ui-loaded');
+                }, 800); 
+            }, 2200);
         });
-    
-        const data = await res.json();
-        btn.innerText = "Get Answer";
-        output.innerText = data.answer;
-    
-      } catch (err) {
-        btn.innerText = "Get Answer";
-        output.innerText = "⚠️ Backend AI server not running. Start api.py first.";
-      }
-    }
-    
-    document.getElementById("imageInput").addEventListener("change", () => {
-      document.getElementById("userInput").value = "Defective product refund issue";
-    });
-    
-    document.getElementById("audioInput").addEventListener("change", () => {
-      document.getElementById("userInput").value = "Seller cheated me and denied refund";
-      generateAnswer();
-    });
-    
-    document.querySelectorAll(".upload-tab").forEach(tab => {
-      tab.addEventListener("click", () => {
-        tab.querySelector("input").click();
-      });
-    });
+
+        // Handle API Call
+        async function analyzeCase() {
+            const btn = document.getElementById('analyze-btn');
+            const input = document.getElementById('case-input').value;
+            const errorMsg = document.getElementById('error-msg');
+            const outputArea = document.getElementById('dynamic-output');
+            const responseSection = document.getElementById('response-area');
+            
+            errorMsg.style.display = 'none';
+
+            if(!input.trim()) {
+                alert("Please describe your consumer issue before analyzing.");
+                return;
+            }
+
+            const originalText = btn.innerText;
+            btn.innerText = "Analyzing Statutes...";
+            btn.style.opacity = "0.8";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch("http://127.0.0.1:5000/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ query: input })
+                });
+
+                if (!res.ok) {
+                    throw new Error("Network response was not ok");
+                }
+
+                const data = await res.json();
+                
+                // Parse the Markdown into HTML
+                outputArea.innerHTML = marked.parse(data.answer);
+                
+                // --- POST-PROCESSING SCRIPT FOR AESTHETICS ---
+                // Find all the H3 elements generated by the Markdown
+                const headers = outputArea.querySelectorAll('h3');
+                headers.forEach(h3 => {
+                    const text = h3.innerText.toLowerCase();
+                    
+                    // If the header is for CLASSIFICATION, turn the text beneath it into a Green Bubble
+                    if (text.includes('classification')) {
+                        let nextElement = h3.nextElementSibling;
+                        // Strip any numbers/asterisks the backend might have added to the paragraph
+                        if (nextElement && nextElement.tagName === 'P') {
+                            nextElement.classList.add('dynamic-badge');
+                            nextElement.innerHTML = nextElement.innerHTML.replace(/\*\*/g, ''); // Clean up stray markdown artifacts
+                        }
+                    }
+                });
+                
+                // Show response area
+                responseSection.style.display = 'block';
+                
+                responseSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+
+            } catch (err) {
+                console.error("Fetch error: ", err);
+                errorMsg.style.display = 'block'; 
+                responseSection.style.display = 'none'; 
+            } finally {
+                btn.innerText = originalText;
+                btn.style.opacity = "1";
+                btn.disabled = false;
+            }
+        }
     </script>
-    
 </body>
 </html>
