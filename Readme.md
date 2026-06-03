@@ -36,6 +36,7 @@ and explains them in simple language.
 
 ## SS/Home, About:
 <img width="1366" height="642" alt="image" src="https://github.com/user-attachments/assets/67586fdc-1f71-4837-9741-2927aaa61ae6" />
+<img width="1124" height="463" alt="image" src="https://github.com/user-attachments/assets/98c20914-36c1-4b25-a417-218c1167a95a" />
 
 
 ## Future Wrok:
