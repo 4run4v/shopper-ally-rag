@@ -10,7 +10,7 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 chunk_texts = []
 chunk_names = []
 
-CHUNK_DIR = "rag_main/chunks"
+CHUNK_DIR = "chunks"
 
 for file in os.listdir(CHUNK_DIR):
     if file.endswith(".txt"):
