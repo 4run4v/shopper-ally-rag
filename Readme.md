@@ -1,3 +1,4 @@
+Deployed Link: https://snazzy-klepon-c93714.netlify.app/
 # Consumer Protection RAG Assistant
 
 Shopper Ally is a Retrieval-Augmented legal reasoning system built on the Consumer Protection Act, 2019 that provides structured, statute-grounded legal guidance for everyday consumer disputes such as refund denial, defective products, misleading advertisements, online fraud, and service deficiencies.
